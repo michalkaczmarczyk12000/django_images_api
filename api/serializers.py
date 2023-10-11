@@ -47,6 +47,7 @@ class ImageCreateSerializer(serializers.ModelSerializer):
 
 
 class ExpiringLinkListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ExpiringLink
         fields = ('link',)
@@ -60,7 +61,6 @@ class ExpiringLinkCreateSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(ExpiringLinkCreateSerializer, self).__init__(*args, **kwargs)
 
-        # Set the choices based on user's iamges
         user = self.context.get('request').user
         images = Image.objects.filter(user=user)
         self.fields['image'].queryset = images
@@ -69,4 +69,3 @@ class ExpiringLinkCreateSerializer(serializers.ModelSerializer):
         if self.context.get('request').user != data.user:
             raise ValidationError('You do not have access to this image')
         return data
-    

@@ -16,7 +16,7 @@ class ExpiringLinkMixin:
     def generate_expiring_link(self, image: Image,
                                expires_in: str = MAX_EXPIRY_LINK_TIME) -> dict:
         # Check that user has permission to generate expiring link
-        user_account_tier = image.user.account_tier
+        user_account_tier = image.user.user_tier
         if not user_account_tier.can_generate_expiring_links:
             raise PermissionDenied("User not authorized to generate expiring link")
 

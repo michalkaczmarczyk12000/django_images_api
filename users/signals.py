@@ -19,7 +19,7 @@ def create_default_users_tiers(sender, **kwargs):
             )
             basic_thumbnail = ThumbnailSize.objects.create(
                 **DEFAULT_CONFIG['basic']['thumbnail_size'])
-            basic_tier.thumbnail_sizes.add(basic_thumbnail)
+            basic_tier.thumbnail_sizes.set([basic_thumbnail])
         if Tier.objects.filter(name="premium").exists():
             pass
         else:

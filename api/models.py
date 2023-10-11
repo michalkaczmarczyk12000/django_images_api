@@ -3,15 +3,18 @@ import os
 import time
 from django.conf import settings
 from django.db import models
+from .validators import validate_img_extension
+from .utils import image_upload_path
 
-
-User = settings.AUTH_USER_MODEL  # auth.User
+User = settings.AUTH_USER_MODEL 
 
 
 class Image(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='img')
+    image = models.ImageField(upload_to=image_upload_path,
+                              validators=[validate_img_extension],
+                              max_length=255)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -39,7 +42,8 @@ class Image(models.Model):
         avaliable_thumbnail_sizes = user_tier.get_available_heights
         all_thumbnails = os.listdir(base_file)
 
-        tier_images = self.extract_avaliable_thumbnails_for_tier(all_thumbnails, avaliable_thumbnail_sizes)
+        tier_images = self.extract_avaliable_thumbnails_for_tier(
+            all_thumbnails, avaliable_thumbnail_sizes)
         (all_thumbnails, avaliable_thumbnail_sizes)
 
         # check if user can get original file
@@ -65,7 +69,7 @@ class ThumbnailSize(models.Model):
 
 class ExpiringLink(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    link = models.CharField(max_length=255)
+    link = models.CharField(max_length=255, null=True)
     image = models.OneToOneField(Image, on_delete=models.CASCADE,
                                  unique=True,
                                  related_name='expiring_link')
