@@ -1,8 +1,8 @@
 import uuid
 import os
+import time
 from django.conf import settings
 from django.db import models
-from datetime import datetime 
 
 
 User = settings.AUTH_USER_MODEL  # auth.User
@@ -61,3 +61,18 @@ class ThumbnailSize(models.Model):
 
     def __str__(self):
         return f"{self.width}x{self.height}"
+
+
+class ExpiringLink(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    link = models.CharField(max_length=255)
+    image = models.OneToOneField(Image, on_delete=models.CASCADE,
+                                 unique=True,
+                                 related_name='expiring_link')
+    expires_in = models.IntegerField()
+
+    def __str__(self) -> str:
+        return f"{self.link}"
+
+    def is_expired(self):
+        return time.time() > self.expires_in
