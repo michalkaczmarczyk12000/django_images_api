@@ -1,5 +1,5 @@
 from django.dispatch import receiver
-from tiers_config import  DEFAULT_CONFIG
+from tiers_config import DEFAULT_CONFIG
 from django.db.models.signals import post_migrate, post_save
 from . models import UserCustom, Tier
 from api.models import ThumbnailSize
@@ -45,3 +45,10 @@ def create_default_users_tiers(sender, **kwargs):
             )
             enterprise_tier.thumbnail_sizes.set(
                 [basic_thumbnail, premium_thumbnail])
+
+
+@receiver(post_save, sender=UserCustom)
+def create_user_account(sender, instance, created, **kwargs):
+    if created and not instance.tier:
+        instance.tier = Tier.objects.get(name='basic')
+        instance.save()
