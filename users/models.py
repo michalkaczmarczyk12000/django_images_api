@@ -1,11 +1,12 @@
+import uuid
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-import os
 from api.models import ThumbnailSize
 # Create your models here.
 
 
 class Tier(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=40)
     get_original_file = models.BooleanField(default=False)
     can_generate_expiring_links = models.BooleanField(default=False)
     thumbnail_sizes = models.ManyToManyField(ThumbnailSize)
@@ -21,3 +22,13 @@ class Tier(models.Model):
     def get_available_heights(self):
         thumnails = self.get_thumbnail_sizes
         return [thumbnail.height for thumbnail in thumnails]
+
+
+class UserCustom(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_tier = models.ForeignKey("Tier", on_delete=models.SET_NULL,
+                                  null=True, related_name="users")
+
+    def __str__(self):
+        return f"""{self.username} ({self.user_tier.name
+                                     if self.user_tier else 'basic'})"""

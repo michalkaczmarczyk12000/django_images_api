@@ -2,6 +2,7 @@ import uuid
 import os
 from django.conf import settings
 from django.db import models
+from datetime import datetime 
 
 
 User = settings.AUTH_USER_MODEL  # auth.User

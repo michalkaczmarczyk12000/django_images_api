@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from  .models import Image
+# from  .models import Image
 
 # Create your views here.
 
