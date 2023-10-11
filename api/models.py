@@ -35,11 +35,11 @@ class Image(models.Model):
 
     def get_thumbnails(self):
         base_file = os.path.dirname(self.image.name)
-        user_tier = self.user.get_tier
-        avaliable_thumbnail_sizes = user_tier.get_avaliable_thumbnail_sizes
+        user_tier = self.user.user_tier
+        avaliable_thumbnail_sizes = user_tier.get_available_heights
         all_thumbnails = os.listdir(base_file)
 
-        tier_images = self.extract_avaliable_thumbnails_for_tier
+        tier_images = self.extract_avaliable_thumbnails_for_tier(all_thumbnails, avaliable_thumbnail_sizes)
         (all_thumbnails, avaliable_thumbnail_sizes)
 
         # check if user can get original file

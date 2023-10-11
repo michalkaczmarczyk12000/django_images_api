@@ -1,11 +1,11 @@
 import tiers_config
-import pathlib
+import os
 from django.core.exceptions import ValidationError
 
 
 def validate_img_extension(image):
     extensions = ['.png', '.jpg']
-    image_extension = pathlib.Path(image).suffix
+    image_extension = os.path.splitext(image.name)[1]
     if image_extension not in extensions:
         raise ValidationError("""this extension is not supported.
                               Supported formats .png .jpg""")

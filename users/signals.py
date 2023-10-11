@@ -49,6 +49,6 @@ def create_default_users_tiers(sender, **kwargs):
 
 @receiver(post_save, sender=UserCustom)
 def create_user_account(sender, instance, created, **kwargs):
-    if created and not instance.tier:
-        instance.tier = Tier.objects.get(name='basic')
+    if created and not instance.user_tier:
+        instance.user_tier = Tier.objects.get(name='basic')
         instance.save()
