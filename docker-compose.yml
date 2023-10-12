@@ -10,7 +10,7 @@ services:
       - SECRET_KEY=django-insecure-!3kr)*qd^cb!id6t0!(%7g+xo^r$(-%&(^4gzqk)dtpcg=u!u(
   web:
     build: .
-    command: python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     restart: always
     volumes:
       - .:/code
