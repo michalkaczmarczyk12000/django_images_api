@@ -25,7 +25,8 @@ def create_default_users_tiers(sender, **kwargs):
         else:
             premium_tier = Tier.objects.create(
                 name="premium",
-                get_original_file=DEFAULT_CONFIG['premium']['get_original_file'],
+                get_original_file=DEFAULT_CONFIG
+                ['premium']['get_original_file'],
                 can_generate_expiring_links=DEFAULT_CONFIG
                 ['premium']['can_generate_expiring_links'],
             )
