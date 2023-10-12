@@ -1,6 +1,5 @@
-from django.shortcuts import render
 import mimetypes
-from rest_framework.decorators import api_view
+
 from rest_framework.exceptions import NotFound, PermissionDenied
 from .serializers import (
     ExpiringLinkCreateSerializer,
@@ -10,10 +9,9 @@ from .serializers import (
 )
 from rest_framework import generics
 from django.http import FileResponse
+
 from .models import Image, ExpiringLink
 from .mixins import ExpiringLinkMixin
-
-# from  .models import Image
 
 # Create your views here.
 
@@ -30,7 +28,8 @@ class ImageCreateView(generics.CreateAPIView):
     serializer_class = ImageCreateSerializer
 
 
-class ExpiringLinkListCreateView(generics.ListCreateAPIView, ExpiringLinkMixin):
+class ExpiringLinkListCreateView(generics.ListCreateAPIView,
+                                 ExpiringLinkMixin):
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return ExpiringLinkCreateSerializer
@@ -43,10 +42,11 @@ class ExpiringLinkListCreateView(generics.ListCreateAPIView, ExpiringLinkMixin):
 
     def perform_create(self, serializer) -> None:
         expires_in = self.request.data.get('expires_in')
-        self.link: dict = self.generate_expiring_link(serializer.validated_data['image'], expires_in)
+        self.link: dict = self.generate_expiring_link(serializer.
+                                                      validated_data['image'],
+                                                      expires_in)
 
     def get_queryset(self):
-        """List expiring links."""
         return ExpiringLink.objects.filter(image__user=self.request.user)
 
     def get_queryset(self):
@@ -60,7 +60,8 @@ class ExpiringLinkDetailView(generics.RetrieveAPIView, ExpiringLinkMixin):
         signed_link = self.kwargs.get('signed_link')
 
         expiring_link_id = self.decode_signed_value(signed_link)
-        expiring_link = generics.get_object_or_404(self.queryset, pk=expiring_link_id)
+        expiring_link = generics.get_object_or_404(self.queryset,
+                                                   pk=expiring_link_id)
         if expiring_link.is_expired():
             expiring_link.delete()
             raise NotFound("Link has expired")
@@ -73,5 +74,8 @@ class ExpiringLinkDetailView(generics.RetrieveAPIView, ExpiringLinkMixin):
     def retrieve(self, request, *args, **kwargs):
         image = self.get_object().image
         content_type, encoding = mimetypes.guess_type(image.name)
-        response = FileResponse(image, content_type=content_type, as_attachment=True, filename=image.name.split('/')[-1])
+        response = FileResponse(image,
+                                content_type=content_type,
+                                as_attachment=True,
+                                filename=image.name.split('/')[-1])
         return response

@@ -18,9 +18,11 @@ class ExpiringLinkMixin:
         # Check that user has permission to generate expiring link
         user_account_tier = image.user.user_tier
         if not user_account_tier.can_generate_expiring_links:
-            raise PermissionDenied("User not authorized to generate expiring link")
+            raise PermissionDenied("User can not generate expiring link")
 
-        if not expires_in.isdigit() or not MIN_EXPIRY_LINK_TIME <= (expires := int(expires_in)) <= MAX_EXPIRY_LINK_TIME:
+        if not expires_in.isdigit() or not (MIN_EXPIRY_LINK_TIME
+                                            <= (expires := int(expires_in))
+                                            <= MAX_EXPIRY_LINK_TIME):
             raise ValidationError("Invalid value for expires_in")
 
         pk = uuid.uuid4()
@@ -45,4 +47,4 @@ class ExpiringLinkMixin:
         try:
             return signing.loads(value)
         except signing.BadSignature:
-            raise NotFound("Invalid signed link")
+            raise NotFound("signed link not found")

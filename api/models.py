@@ -6,7 +6,7 @@ from django.db import models
 from .validators import validate_img_extension
 from .utils import image_upload_path
 
-User = settings.AUTH_USER_MODEL 
+User = settings.AUTH_USER_MODEL
 
 
 class Image(models.Model):
