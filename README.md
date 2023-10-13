@@ -13,4 +13,4 @@
 - the task took me about 7-8 hours
 
 ## Future plans
-Add celery asynchronius task queue or Kafka broker
+Add celery asynchronius task queue or Kafka broker and use amazon s3 to data storage
